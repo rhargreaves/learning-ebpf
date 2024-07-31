@@ -32,7 +32,7 @@ int hello(void *ctx) {
 }
 """
 
-b = BPF(text=program, cflags=["-O1"])
+b = BPF(text=program)
 syscall = b.get_syscall_fnname("execve")
 b.attach_kprobe(event=syscall, fn_name="hello")
 
