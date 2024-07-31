@@ -1,0 +1,9 @@
+BasedOnStyle: WebKit
+AllowShortFunctionsOnASingleLine: false
+ColumnLimit: 100
+ReflowComments: false
+SortIncludes: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+SpaceBeforeParens: ControlStatementsExceptControlMacros

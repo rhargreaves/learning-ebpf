@@ -4,9 +4,10 @@
 int counter = 0;
 
 SEC("xdp")
-int hello(struct xdp_md *ctx) {
+int hello(struct xdp_md *ctx)
+{
     bpf_printk("Hello World %d", counter);
-    counter++; 
+    counter++;
     return XDP_PASS;
 }
 
