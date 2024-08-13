@@ -27,41 +27,56 @@ void lost_event(void *ctx, int cpu, long long unsigned int data_sz)
 
 int main()
 {
-    struct hello_buffer_config_bpf *skel;
-    int err;
+	struct hello_buffer_config_bpf *skel;
+	int err;
 	struct perf_buffer *pb = NULL;
 
 	libbpf_set_print(libbpf_print_fn);
 
 	skel = hello_buffer_config_bpf__open_and_load();
-	if (!skel) {
+	if (!skel)
+	{
 		printf("Failed to open BPF object\n");
 		return 1;
 	}
 
 	err = hello_buffer_config_bpf__attach(skel);
-	if (err) {
+	if (err)
+	{
 		fprintf(stderr, "Failed to attach BPF skeleton: %d\n", err);
 		hello_buffer_config_bpf__destroy(skel);
-        return 1;
+		return 1;
+	}
+
+	int uid = 501;
+	err = bpf_map__update_elem(skel->maps.my_config, &uid, 4, "hello 501!", 12, 0);
+	if (err)
+	{
+		fprintf(stderr, "Failed to set config %d\n", err);
+		hello_buffer_config_bpf__destroy(skel);
+		return 1;
 	}
 
 	pb = perf_buffer__new(bpf_map__fd(skel->maps.output), 8, handle_event, lost_event, NULL, NULL);
-	if (!pb) {
+	if (!pb)
+	{
 		err = -1;
 		fprintf(stderr, "Failed to create ring buffer\n");
 		hello_buffer_config_bpf__destroy(skel);
-        return 1;
+		return 1;
 	}
 
-	while (true) {
+	while (true)
+	{
 		err = perf_buffer__poll(pb, 100 /* timeout, ms */);
 		// Ctrl-C gives -EINTR
-		if (err == -EINTR) {
+		if (err == -EINTR)
+		{
 			err = 0;
 			break;
 		}
-		if (err < 0) {
+		if (err < 0)
+		{
 			printf("Error polling perf buffer: %d\n", err);
 			break;
 		}
