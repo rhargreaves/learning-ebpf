@@ -48,8 +48,9 @@ int main()
 		return 1;
 	}
 
-	int uid = 501;
-	err = bpf_map__update_elem(skel->maps.my_config, &uid, 4, "hello 501!", 12, 0);
+	__u32 uid = 501;
+	struct user_msg_t user_msg = {"hello 501!"};
+	err = bpf_map__update_elem(skel->maps.my_config, &uid, sizeof(__u32), &user_msg, sizeof(struct user_msg_t), 0);
 	if (err)
 	{
 		fprintf(stderr, "Failed to set config %d\n", err);

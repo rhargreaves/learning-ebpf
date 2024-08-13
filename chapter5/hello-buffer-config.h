@@ -1,4 +1,5 @@
-struct data_t {
+struct data_t
+{
    int pid;
    int uid;
    char command[16];
@@ -6,3 +7,7 @@ struct data_t {
    char path[16];
 };
 
+struct user_msg_t
+{
+   char message[12];
+};
